@@ -73,7 +73,7 @@ Navigate to the `test` directory in the command line and run
 
 `mocha`
 
-You should a result like this:
+You should see a result like this:
 
 ```
   Array
