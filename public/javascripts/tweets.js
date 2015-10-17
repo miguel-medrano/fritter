@@ -51,7 +51,6 @@
       var id = item.data('tweet-id');
       var content = item.find('input').val();
       var username = item.data('username');
-      console.log(item.data('username'));
       if (content.trim().length === 0) {
           alert('Input must not be empty');
           return;

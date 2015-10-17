@@ -55,4 +55,3 @@ $(document).on('click', '#signin-btn', function(evt) {
 $(document).on('click', '#register-btn', function(evt) {
 	loadPage('register');
 });
-

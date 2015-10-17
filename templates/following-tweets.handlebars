@@ -1,0 +1,17 @@
+<div id="all-tweets">
+
+    <p>Welcome, {{currentUser}} (<a href="#" id="logout-link">logout</a>)</p>
+
+    <div>
+        <div class="error"></div>
+    </div>
+
+    <h1><a href="#" id="my-tweets-link">My Tweets</a> <a href="#" id="all-tweets-link">All Tweets</a> Following Tweets</h1>
+
+    {{#each tweets}}
+        {{> all-tweet }}
+    {{else}}
+        <p><em>No tweets yet!</em></p>
+    {{/each}}
+
+</div>

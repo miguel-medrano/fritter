@@ -1,15 +1,16 @@
 <div id="tweets">
 
   <p>Welcome, {{currentUser}} (<a href="#" id="logout-link">logout</a>)</p>
-  
-  <div>
-    <div class="error"></div>
-    <label for="new-tweet-input">Add a new tweet:</label>
-    <input type="text" id="new-tweet-input" />
-    <button id="submit-new-tweet">Add</button>
-  </div>
 
-  <h1>My Tweets (<a href="#" id="all-tweets-link">All Tweets</a>)</h1>
+
+  <h1>My Tweets <a href="#" id="all-tweets-link">All Tweets</a> <a href="#" id="following-tweets-link">Following Tweets</a></h1>
+
+  <div>
+      <div class="error"></div>
+      <label for="new-tweet-input">Add a new tweet:</label>
+      <input type="text" id="new-tweet-input" />
+      <button id="submit-new-tweet">Add</button>
+  </div>
 
   {{#each tweets}}
     {{> tweet}}

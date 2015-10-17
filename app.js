@@ -1,18 +1,27 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-require('handlebars/runtime');
-
+var mongoose = require('mongoose');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var tweets = require('./routes/tweets');
 var allTweets = require('./routes/all-tweets');
+var followingTweets = require('./routes/following-tweets');
+require('handlebars/runtime');
 
 var User = require('./models/User');
+
+mongoose.connect('mongodb://localhost/test');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function(callback){
+    console.log("database connected");
+});
+
+
 
 var app = express();
 
@@ -34,10 +43,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // the req.currentUser field with the logged-in
 // user object based off the username provided
 // in the session variable (accessed by the
-// encrypted cookied).
+// encrypted cookie).
 app.use(function(req, res, next) {
     if (req.session.username) {
-        User.findByUsername(req.session.username,
+        User.findOne({username: req.session.username},
             function(err, user) {
                 if (user) {
                     req.currentUser = user;
@@ -56,6 +65,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/tweets', tweets);
 app.use('/all-tweets', allTweets);
+app.use('/following-tweets', followingTweets);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

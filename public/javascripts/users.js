@@ -9,6 +9,7 @@
           currentUser = response.content.user;
           loadHomePage();
       }).fail(function(responseObject) {
+          console.log("Signin errorsasd");
           var response = $.parseJSON(responseObject.responseText);
           $('.error').text(response.err);
       });
@@ -17,6 +18,11 @@
   $(document).on('submit', '#register-form', function(evt) {
       evt.preventDefault();
       var formData = helpers.getFormData(this);
+      if (formData.password !== formData.confirm){
+          $('.error').text('Password and confirmation do not match!');
+          return;
+      }
+      delete formData['confirm'];
       $.post(
           '/users',
           formData
@@ -43,17 +49,22 @@
 
   $(document).on('click', '#all-tweets-link', function(evt) {
       evt.preventDefault();
-      console.log("HEHA");
       $.get('all-tweets', function(response) {
-          loadPage('all-tweets', {tweets: response.content.tweets})
+          loadPage('all-tweets', {currentUser: currentUser, tweets: response.content.tweets})
       });
   });
 
   $(document).on('click', '#my-tweets-link', function(evt) {
       evt.preventDefault();
-      console.log("YAS orZ");
       $.get('tweets', function(response) {
-          loadPage('tweets', {tweets: response.content.tweets})
+          loadPage('tweets', {currentUser: currentUser, tweets: response.content.tweets})
+      });
+  });
+
+  $(document).on('click', '#following-tweets-link', function(evt) {
+      evt.preventDefault();
+      $.get('following-tweets', function(response){
+          loadPage('following-tweets', {currentUser: currentUser, tweets: response.content.tweets});
       });
   });
 

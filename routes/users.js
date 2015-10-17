@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var utils = require('../utils/utils');
-
 var User = require('../models/User');
 
 /*
@@ -14,16 +13,16 @@ var isLoggedInOrInvalidBody = function(req, res) {
   if (req.currentUser) {
     utils.sendErrResponse(res, 403, 'There is already a user logged in.');
     return true;
-  } else if (!(req.body.username)) {
-    utils.sendErrResponse(res, 400, 'Username not provided.');
+  } else if (!(req.body.username && req.body.password)) {
+    utils.sendErrResponse(res, 400, 'Username or password not provided.');
     return true;
   }
   return false;
 };
 
 /*
- This function will check to see that the provided username
- is valid. For empty username, or if the combination is not correct,
+ This function will check to see that the provided username-password combination
+ is valid. For empty username or password, or if the combination is not correct,
  an error will be returned.
 
  An user already logged in is not allowed to call the login API again; an attempt
@@ -32,26 +31,42 @@ var isLoggedInOrInvalidBody = function(req, res) {
  POST /users/login
  Request body:
  - username
+ - password
  Response:
  - success: true if login succeeded; false otherwise
  - content: on success, an object with a single field 'user', the object of the logged in user
  - err: on error, an error message
- */
-router.post('/login', function(req, res) {
-  if (isLoggedInOrInvalidBody(req, res)) {
-    return;
+// */
+//router.post('/login', function(req, res) {
+//  if (isLoggedInOrInvalidBody(req, res)) {
+//    return;
+//
+//  }
+//
+//  User.verifyPassword(req.body.username, req.body.password, function(err, match) {
+//    if (match) {
+//      req.session.username = req.body.username;
+//      utils.sendSuccessResponse(res, { user : req.body.username });
+//    } else {
+//      utils.sendErrResponse(res, 403, 'Username or password invalid.');
+//    }
+//  });
+//});
 
-  }
-
-  User.verifyUser(req.body.username, function(err, match) {
-    if (match) {
-      req.session.username = req.body.username;
-      utils.sendSuccessResponse(res, { user : req.body.username });
-    } else {
-      utils.sendErrResponse(res, 403, 'Username invalid.');
+router.post('/login', function(req,res){
+    if (isLoggedInOrInvalidBody(req, res)) {
+        return;
     }
-  });
+    User.findOne({username: req.body.username}, function(err, user){
+        if (user && user.password === req.body.password) {
+            req.session.username = req.body.username;
+            utils.sendSuccessResponse(res, {user: req.body.username});
+        } else {
+            utils.sendErrResponse(res, 403, 'Username or password invalid');
+        }
+    });
 });
+
 
 /*
  POST /users/logout
@@ -88,24 +103,50 @@ router.post('/logout', function(req, res) {
  - success: true if user creation succeeded; false otherwise
  - err: on error, an error message
  */
-router.post('/', function(req, res) {
-  if (isLoggedInOrInvalidBody(req, res)) {
-    return;
-  }
+//router.post('/', function(req, res) {
+//  if (isLoggedInOrInvalidBody(req, res)) {
+//    return;
+//  }
+//
+//  User.createNewUser(req.body.username, req.body.password,
+//      function(err) {
+//        if (err) {
+//          if (err.taken) {
+//            utils.sendErrResponse(res, 400, 'That username is already taken!');
+//          } else {
+//            utils.sendErrResponse(res, 500, 'An unknown error has occurred.');
+//          }
+//        } else {
+//          utils.sendSuccessResponse(res, req.body.username);
+//        }
+//      });
+//});
 
-  User.createNewUser(req.body.username,
-      function(err) {
-        if (err) {
-          if (err.taken) {
-            utils.sendErrResponse(res, 400, 'That username is already taken!');
-          } else {
-            utils.sendErrResponse(res, 500, 'An unknown error has occurred.');
-          }
-        } else {
-          utils.sendSuccessResponse(res, req.body.username);
+router.post('/', function(req, res){
+    if (isLoggedInOrInvalidBody(req, res)){
+        return;
+    }
+    user = req.body;
+    User.create({ username: user.username,
+            password: user.password,
+            tweets: [],
+            following: []},
+        function(err){
+            if (err) {
+                if (err.code === 11000) {
+                    utils.sendErrResponse(res, 400, 'That username is already taken!');
+                } else {
+                    utils.sendErrResponse(res, 500, 'An unknown error has occurred.');
+                }
+            } else {
+                utils.sendSuccessResponse(res, req.body.username);
+            }
         }
-      });
+    );
 });
+
+
+
 
 /*
  Determine whether there is a current user logged in
