@@ -151,7 +151,7 @@ router.get('/:tweet', function(req, res) {
 
 router.post('/', function(req, res){
   Tweet.create({username: req.currentUser.username,
-    creator: req.currentUser.username,
+    creator: req.body.creator,
     content: req.body.content}, function(err, tweet){
     if(err){
       utils.sendErrResponse(res, 500, 'An unkown error occurred');
@@ -170,19 +170,6 @@ router.post('/', function(req, res){
     - success: true if the server succeeded in recording the user's tweet
     - err: on failure, an error message
 */
-//router.post('/:tweet', function(req, res) {
-//  User.updateTweet(
-//    req.currentUser.username,
-//    req.tweet._id,
-//    req.body.content,
-//    function(err) {
-//      if (err) {
-//        utils.sendErrResponse(res, 500, 'An unknown error occurred.');
-//      } else {
-//        utils.sendSuccessResponse(res);
-//      }
-//  });
-//});
 
 router.post('/:tweet', function(req,res){
   Tweet.update({_id: req.tweet._id},{ $set: {content: req.body.content}}, function(err) {
@@ -202,18 +189,6 @@ router.post('/:tweet', function(req,res){
     - success: true if the server succeeded in deleting the user's tweet
     - err: on failure, an error message
 */
-//router.delete('/:tweet', function(req, res) {
-//  User.removeTweet(
-//    req.currentUser.username,
-//    req.tweet._id,
-//    function(err) {
-//      if (err) {
-//        utils.sendErrResponse(res, 500, 'An unknown error occurred.');
-//      } else {
-//        utils.sendSuccessResponse(res);
-//      }
-//  });
-//});
 
 router.delete('/:tweet', function(req, res) {
   Tweet.remove({_id: req.tweet._id}, function(err){

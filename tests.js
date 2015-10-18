@@ -1,6 +1,5 @@
 /*
 TEST PARTITIONS
-(TESTED VISUALLY FOR NOW...)
     FindByUsername
         existingUser
         missingUser
@@ -37,19 +36,3 @@ TEST PARTITIONS
             nonExistentTweet
 
  */
-
-QUnit.test( "Test1", function( assert ) {
-    assert.ok( 1 == "1", "Passed!" );
-});
-QUnit.test( "Test2", function( assert ) {
-    assert.ok( 1 == "1", "Passed!" );
-});
-QUnit.test( "Test3", function( assert ) {
-    assert.ok( 1 == "1", "Passed!" );
-});
-QUnit.test( "Test4", function( assert ) {
-    assert.ok( 1 == "1", "Passed!" );
-});
-QUnit.test( "Test5", function( assert ) {
-    assert.ok( 1 == "1", "Passed!" );
-});

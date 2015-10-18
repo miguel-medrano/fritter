@@ -8,7 +8,7 @@
       }
       $.post(
           '/tweets',
-          { content: content }
+          { content: content, creator: currentUser }
       ).done(function(response) {
           loadHomePage();
       }).fail(function(responseObject) {
@@ -38,6 +38,36 @@
           existingText: item.find('p').text()
       }));
       item.hide();
+  });
+
+  $(document).on('click', '.retweet', function(evt){
+      var item = $(this).parent().parent();
+      $.post('/tweets',
+          {content: item.find('p').text(), creator: item.data('tweet-creator')}
+      ).done(function(response){
+              alert("Retweeted! See in your tweets.");
+              loadHomePage();
+          }).fail(function(responseObject) {
+              var response = $.parseJSON(responseObject.responseText);
+              $('.error').text(response.err);
+          });
+  });
+
+
+  $(document).on('click', '.follow-user', function(evt) {
+      var item = $(this).parent().parent();
+      var id = item.data('tweet-id');
+      var username = item.data('tweet-username');
+      $.post(
+          '/following/',
+          {followUsername: username}
+      ).done(function(response) {
+              alert("Now following!");
+              loadAllTweetsPage();
+          }).fail(function(responseObject) {
+              var response = $.parseJSON(responseObject.responseText);
+              $('.error').text(response.err);
+          });
   });
 
   $(document).on('click', '.cancel-button', function(evt) {

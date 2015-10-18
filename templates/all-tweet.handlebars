@@ -1,4 +1,9 @@
-<div class="all-tweet" data-tweet-id={{_id}}>
-    <h4>@{{username}}</h4>
-    <p>{{content}}</p>
-</div>
+{{#each tweets}}
+    <div class="all-tweet" data-tweet-id={{_id}} data-tweet-creator={{creator}} data-tweet-username={{username}}>
+        <h4>@{{username}} {{isFollowing ../following ../currentUser username}} {{retweet ../currentUser username}}</h4>
+        <h6>{{tweetedBy username creator}}</h6>
+        <p>{{content}}</p>
+    </div>
+{{else}}
+    <p><em>No tweets yet!</em></p>
+{{/each}}

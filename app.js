@@ -10,6 +10,7 @@ var users = require('./routes/users');
 var tweets = require('./routes/tweets');
 var allTweets = require('./routes/all-tweets');
 var followingTweets = require('./routes/following-tweets');
+var following = require('./routes/following');
 require('handlebars/runtime');
 
 var User = require('./models/User');
@@ -65,6 +66,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/tweets', tweets);
 app.use('/all-tweets', allTweets);
+app.use('/following', following);
 app.use('/following-tweets', followingTweets);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

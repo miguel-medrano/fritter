@@ -9,7 +9,6 @@
           currentUser = response.content.user;
           loadHomePage();
       }).fail(function(responseObject) {
-          console.log("Signin errorsasd");
           var response = $.parseJSON(responseObject.responseText);
           $('.error').text(response.err);
       });
@@ -50,7 +49,7 @@
   $(document).on('click', '#all-tweets-link', function(evt) {
       evt.preventDefault();
       $.get('all-tweets', function(response) {
-          loadPage('all-tweets', {currentUser: currentUser, tweets: response.content.tweets})
+          loadPage('all-tweets', {currentUser: currentUser, following: response.content.following, tweets: response.content.tweets})
       });
   });
 
